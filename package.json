@@ -1,0 +1,28 @@
+{
+  "name": "poker-club",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "web",
+    "server",
+    "telegram-bot"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c blue,green \"npm run dev -w server\" \"npx wait-on http-get://127.0.0.1:3001/api/health -t 120000 -i 300 && npm run dev -w web\"",
+    "dev:web": "npm run dev -w web",
+    "dev:server": "npm run dev -w server",
+    "dev:bot": "npm run dev -w telegram-bot",
+    "dev:stack": "concurrently -k -n server,bot -c blue,magenta \"npm run dev -w server\" \"npx wait-on http-get://127.0.0.1:3001/api/health -t 120000 -i 400 && npm run dev -w telegram-bot\"",
+    "build": "npm run build -w web && npm run build -w server",
+    "prisma:generate": "npm run prisma:generate -w server",
+    "prisma:migrate": "npm run prisma:migrate -w server",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d --build",
+    "deploy:vps": "bash scripts/deploy-to-vps.sh",
+    "bundle": "bash scripts/make-site-bundle.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "wait-on": "^8.0.1"
+  }
+}
